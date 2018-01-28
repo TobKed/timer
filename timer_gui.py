@@ -103,6 +103,8 @@ class Timer():
                 ctypes.windll.user32.LockWorkStation()
             else:
                 os.system('cinnamon-screensaver-command -l')
+            self.choose_window.destroy()
+            self.master.destroy()
         if choice == 2:
             os.system('shutdown -s' if os.name == 'nt' else 'shutdown now')
         self.action_choice.set(0)
