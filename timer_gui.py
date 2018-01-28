@@ -37,11 +37,11 @@ class Timer():
         self.choose_window.title('Choose what to do')
         # hours spinbox
         self.hours = StringVar()
-        self.hours_spinbox = Spinbox(self.choose_window, from_=0, to=100, textvariable=self.hours, width=5)
+        self.hours_spinbox = Spinbox(self.choose_window, from_=0, to=24, textvariable=self.hours, width=5)
         self.hours.set("h")
         # minutes spinbox
         self.minutes = StringVar()
-        self.minutes_spinbox = Spinbox(self.choose_window, from_=0, to=100, textvariable=self.minutes, width=5)
+        self.minutes_spinbox = Spinbox(self.choose_window, from_=0, to=60, textvariable=self.minutes, width=5)
         self.minutes.set("m")
         # action_choice radio_button
         self.action_choice = IntVar()
@@ -86,7 +86,7 @@ class Timer():
         angle_to_end = self.time_to_end.seconds / self.time_to_end_start.seconds
         angle_to_end = int(angle_to_end*360)
         time_to_end = (H_to_end, M_to_end, S_to_end)
-        if not self.time_to_end.days:
+        if not self.time_to_end.seconds == 0:
             self.canvas.itemconfigure(self.text, text = "{:02d}:{:02d}:{:02d}".format(*time_to_end))
             self.canvas.itemconfigure(self.arc, extent=angle_to_end)
         else:
@@ -105,23 +105,17 @@ class Timer():
                 os.system('cinnamon-screensaver-command -l')
         if choice == 2:
             os.system('shutdown -s' if os.name == 'nt' else 'shutdown now')
-
         self.action_choice.set(0)
 
     def position_window_in_corner(self, window):
         window.update_idletasks()
         w = window.winfo_screenwidth()
-        print("window.winfo_screenwidth: "+ str(w))
         h = window.winfo_screenheight()
-        print("window.winfo_screenheight: " + str(h))
         size = tuple(int(_) for _ in window.geometry().split('+')[0].split('x'))
         x = w - size[0]
         y = h - size[1]
         window.geometry("%dx%d+%d+%d" % (size + (x, y)))
-        print("x = w - size[0] : {} = {} - {}".format(x, w, size[0]))
-        print("y = h - size[1] : {} = {} - {}".format(y, h, size[1]))
-        print("size + (x, y) : {} + {}".format(size,  (x, y)))
-        print("%dx%d+%d+%d" % (size + (x, y)))
+
 
 
 def main():
