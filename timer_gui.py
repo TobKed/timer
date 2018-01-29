@@ -33,7 +33,6 @@ class Timer():
         self.choose_window = Toplevel(self.master)
         self.choose_window.lift(self.master)
         self.choose_window.resizable(False, False)
-        self.choose_window.grab_set()
         self.choose_window.title('Choose what to do')
         # hours spinbox
         self.hours = StringVar()
@@ -45,17 +44,19 @@ class Timer():
         self.minutes.set("m")
         # action_choice radio_button
         self.action_choice = IntVar()
-        self.action_button_1 = Radiobutton(self.choose_window, text='lock', variable=self.action_choice, value=1)
-        self.action_button_2 = Radiobutton(self.choose_window, text='shutdown', variable=self.action_choice, value=2)
+        self.action_button_1 = Radiobutton(self.choose_window, text='lock', variable=self.action_choice, value=1, padx = 10)
+        self.action_button_2 = Radiobutton(self.choose_window, text='shutdown', variable=self.action_choice, value=2, padx = 10)
         # button start
         self.start_button = Button(self.choose_window, text='START', command=self.start_countdown)
         # grid manager
-        self.hours_spinbox.grid(column=0, row=0)
-        self.minutes_spinbox.grid(column=1, row=0)
+        self.hours_spinbox.grid(column=0, row=0, sticky=E+W)
+        self.minutes_spinbox.grid(column=1, row=0, sticky=E+W)
         self.action_button_1.grid(column=0, columnspan=2, row=1, sticky=W)
         self.action_button_2.grid(column=0, columnspan=2, row=2, sticky=W)
         self.start_button.grid(column=0, columnspan=2, row=3, sticky=E+W)
-
+        self.choose_window.columnconfigure(0, weight = 1)
+        self.choose_window.columnconfigure(1, weight = 1)
+        self.position_window_in_corner(self.choose_window)
         self.choose_window.protocol("WM_DELETE_WINDOW", self.master.destroy)    # destroy master when chose option is closed
 
     def start_countdown(self):
@@ -66,9 +67,8 @@ class Timer():
         self.update_clock()
         self.choose_window.withdraw()
         self.canvas.itemconfigure(self.text_action, text=self.text_action_dict.get(self.action_choice.get()))
-        self.position_window_in_corner(self.master)
         self.master.deiconify()
-
+        self.position_window_in_corner(self.master)
 
     def check_choice_input(self):
         if self.hours.get().isdigit() and self.minutes.get().isdigit() and self.action_choice.get():
@@ -116,6 +116,7 @@ class Timer():
         size = tuple(int(_) for _ in window.geometry().split('+')[0].split('x'))
         x = w - size[0]
         y = h - size[1]
+        if os.name == 'nt': y -= 68
         window.geometry("%dx%d+%d+%d" % (size + (x, y)))
 
 
