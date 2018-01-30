@@ -1,7 +1,9 @@
+# -*- coding: UTF-8 -*-
+
 import ctypes
 import os
 import time
-import asciinumbers as asci
+import asciinumbers as ascii
 if os.name == 'nt':
     import winsound
     
@@ -45,7 +47,7 @@ def print_timer():
         minutes = str((x%3600)//60).zfill(2) + ":"
         seconds = str(x%60).zfill(2)
         time_to_action = ' ' + hours + minutes + seconds
-        asci.print_ASCII(time_to_action)
+        ascii.printASCII(time_to_action)
         info = " to " + choice_str[choice] + " "
         print(info.center(76, "."))
         if choice == 1 and x <= 5:
@@ -71,10 +73,7 @@ def main():
         else:
             os.system('cinnamon-screensaver-command -l')
     if choice == 2:
-        os.system('shutdown -s' if os.name == 'nt' else 'shutdown +1 "Your system will shutdwon in a minute"')
+        os.system('shutdown -s' if os.name == 'nt' else 'shutdown +1 "Your system will shutdown in a minute"')
 
 
 if __name__ == "__main__": main()
-
- 
- 
