@@ -398,10 +398,10 @@ for character in alphabet:
     alphabet[character] = alphabet[character].splitlines()
 
 
-def printASCII(str):
-    str = str.lower()
+def printASCII(str_in):
+    str_in = str_in.lower()
     str_out = []
-    for character in str:
+    for character in str_in:
         if character in alphabet:
             str_out.append(alphabet[character])
     str_out = list(zip(*str_out))
