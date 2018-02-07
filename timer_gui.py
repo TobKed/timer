@@ -27,20 +27,28 @@ class Timer():
         self.text = self.canvas.create_text(150, 150, text = '', font = ('Courier', 30, 'bold'), fill="white")
         self.text_action_dict = {1: "until lock", 2: "until shutdown"}
         self.text_action = self.canvas.create_text(150, 180, text='', font=('Courier', 15, 'bold'), fill="gray48")
+        self.text_shut_time = self.canvas.create_text(150, 120, text='123213', font=('Courier', 15), fill="gray48")
         self.master.bind('<Configure>', lambda e: self.scale_timer())
         self.choose_option()
+
+        style = Style()
+        style.configure('Start.TButton', padding=10, font=('', 14, 'bold'))
+
 
     def scale_timer(self):
         w_height = self.master.winfo_height()
         w_width = self.master.winfo_width()
         max_canvas_size = min(w_height, w_width)
         self.canvas.config(width=max_canvas_size, height=max_canvas_size)
+        self.canvas.itemconfigure(self.text, font=('Courier', int(max_canvas_size*0.1), 'bold'))
+        self.canvas.itemconfigure(self.text_action, font=('Courier', int(max_canvas_size*0.05), 'bold'))
+        self.canvas.itemconfigure(self.text_shut_time, font=('Courier', int(max_canvas_size*0.05)))
         self.canvas.coords(self.arc, 10, 10, max_canvas_size-10, max_canvas_size-10)
         self.canvas.coords(self.oval, max_canvas_size*0.1, max_canvas_size*.1, max_canvas_size-(max_canvas_size*0.1), max_canvas_size-(max_canvas_size*0.1))
         self.canvas.coords(self.text, max_canvas_size*0.5, max_canvas_size*0.5)
-        self.canvas.itemconfigure(self.text, font=('Courier', int(max_canvas_size*0.1), 'bold'))
-        self.canvas.coords(self.text_action, max_canvas_size*0.5, max_canvas_size*0.6)
-        self.canvas.itemconfigure(self.text_action, font=('Courier', int(max_canvas_size*0.05), 'bold'))
+        self.canvas.coords(self.text_action, max_canvas_size * 0.5, max_canvas_size * 0.6)
+        self.canvas.coords(self.text_shut_time, max_canvas_size * 0.5, max_canvas_size * 0.4)
+
 
     def choose_option(self):
         self.options_window = Toplevel(self.master)
@@ -60,7 +68,7 @@ class Timer():
         self.action_button_1 = Radiobutton(self.options_window, text='lock', variable=self.action_choice, value=1)
         self.action_button_2 = Radiobutton(self.options_window, text='shutdown', variable=self.action_choice, value=2)
         # button start
-        self.start_button = Button(self.options_window, text='START', command=self.start_countdown)
+        self.start_button = Button(self.options_window, text='START', command=self.start_countdown, style="Start.TButton")
         # grid manager
         self.hours_spinbox.grid(column=0, row=0, sticky=E+W)
         self.minutes_spinbox.grid(column=1, row=0, sticky=E+W)
@@ -79,6 +87,7 @@ class Timer():
             self.update_clock()
             self.options_window.withdraw()
             self.canvas.itemconfigure(self.text_action, text=self.text_action_dict.get(self.action_choice.get()))
+            self.canvas.itemconfigure(self.text_shut_time, text=self.time_end.strftime("%H:%M"))
             self.master.deiconify()
             self.position_window_in_corner(self.master)
 
