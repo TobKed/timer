@@ -9,7 +9,6 @@ if os.name == 'nt':
     import ctypes
 
 
-
 class Timer():
     def __init__(self, master):
         self.master = master
@@ -66,18 +65,22 @@ class Timer():
         # action_choice radio_button
         self.action_choice = IntVar()
         self.action_button_1 = Radiobutton(self.options_window, text='lock', variable=self.action_choice, value=1)
-        self.action_button_2 = Radiobutton(self.options_window, text='shutdown', variable=self.action_choice, value=2)
+        if os.name == "posix":
+            self.action_button_2 = Radiobutton(self.options_window, text='suspend', variable=self.action_choice, value=2)
+        self.action_button_3 = Radiobutton(self.options_window, text='shutdown', variable=self.action_choice, value=3)
         # button start
         self.start_button = Button(self.options_window, text='START', command=self.start_countdown, style="Start.TButton")
         # grid manager
         self.hours_spinbox.grid(column=0, row=0, sticky=E+W)
         self.minutes_spinbox.grid(column=1, row=0, sticky=E+W)
         self.action_button_1.grid(column=0, columnspan=2, row=1, sticky=W)
-        self.action_button_2.grid(column=0, columnspan=2, row=2, sticky=W)
-        self.start_button.grid(column=0, columnspan=2, row=3, sticky=E+W)
+        if os.name == "posix":
+            self.action_button_2.grid(column=0, columnspan=2, row=2, sticky=W)
+        self.action_button_3.grid(column=0, columnspan=2, row=3, sticky=W)
+        self.start_button.grid(column=0, columnspan=2, row=4, sticky=E+W)
         self.options_window.columnconfigure(0, weight = 1)
         self.options_window.columnconfigure(1, weight = 1)
-        self.options_window.protocol("WM_DELETE_WINDOW", self.master.destroy)            # destroy master when chose option is closed
+        self.options_window.protocol("WM_DELETE_WINDOW", self.master.destroy)            # destroy master when chose windows is closed
 
     def start_countdown(self):
         if self.check_choice_input():
@@ -119,18 +122,30 @@ class Timer():
     def take_action(self):
         choice = self.action_choice.get()
         if choice == 1:
-            if os.name == 'nt':
-                winsound.Beep(2500, 1500)
-                ctypes.windll.user32.LockWorkStation()
-            else:
-                os.system('cinnamon-screensaver-command -l')
-            self.options_window.destroy()
-            self.master.destroy()
-        if choice == 2:
-            os.system('shutdown -s' if os.name == 'nt' else 'shutdown now')
-        self.action_choice.set(0)
+            self.lock_system()
+        elif choice == 2:
+            self.suspend_system()
+        elif choice == 3:
+            self.shutdown_system()
+        self.options_window.destroy()
+        self.master.destroy()
 
-    def position_window_in_corner(self, window):
+    def lock_system(self):
+        if os.name == 'nt':
+            winsound.Beep(2500, 1500)
+            ctypes.windll.user32.LockWorkStation()
+        else:
+            os.system('cinnamon-screensaver-command -l')
+
+    def suspend_system(selfs):
+        if os.name == 'posix':
+            os.system('systemctl')
+
+    def shutdown_system(self):
+        os.system('shutdown -s' if os.name == 'nt' else 'shutdown now')
+
+    @staticmethod
+    def position_window_in_corner(window):
         window.update_idletasks()
         w = window.winfo_screenwidth()
         h = window.winfo_screenheight()
