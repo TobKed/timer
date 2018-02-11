@@ -130,18 +130,21 @@ class Timer():
         self.options_window.destroy()
         self.master.destroy()
 
-    def lock_system(self):
+    @staticmethod
+    def lock_system():
         if os.name == 'nt':
             winsound.Beep(2500, 1500)
             ctypes.windll.user32.LockWorkStation()
         else:
             os.system('cinnamon-screensaver-command -l')
 
-    def suspend_system(selfs):
+    @staticmethod
+    def suspend_system():
         if os.name == 'posix':
             os.system('systemctl suspend')
 
-    def shutdown_system(self):
+    @staticmethod
+    def shutdown_system():
         os.system('shutdown -s' if os.name == 'nt' else 'shutdown now')
 
     @staticmethod
