@@ -139,7 +139,7 @@ class Timer():
 
     def suspend_system(selfs):
         if os.name == 'posix':
-            os.system('systemctl')
+            os.system('systemctl suspend')
 
     def shutdown_system(self):
         os.system('shutdown -s' if os.name == 'nt' else 'shutdown now')
